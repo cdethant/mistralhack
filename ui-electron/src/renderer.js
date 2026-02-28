@@ -17,8 +17,8 @@ async function fetchFriends() {
     console.warn("Supabase client not initialized. Check your .env file.");
     // Fallback if no .env configured
     friends = [
-      { id: 0, name: 'song' },
-      { id: 1, name: 'ethan' },
+      { id: 0, name: 'song', device_id: 'friend-device' },
+      { id: 1, name: 'ethan', device_id: 'panigale' },
     ];
     renderFriends();
     return;
@@ -44,25 +44,19 @@ async function fetchFriends() {
   }
 }
 
-function getCurrentUserId() {
-  let userId = localStorage.getItem('current_user_id');
-  if (!userId) {
-    // Default to '1' (ethan) if not set, for demonstration purposes
-    userId = '1';
-    localStorage.setItem('current_user_id', userId);
-  }
-  return userId;
-}
-
-function renderFriends() {
+async function renderFriends() {
   const listContainer = document.getElementById('friends-list');
   if (!listContainer) return;
 
-  const currentUserId = getCurrentUserId();
+  // Identify device via Electron API (Async)
+  const systemHostname = window.electronAPI ? await window.electronAPI.getHostname() : 'unknown';
+
   listContainer.innerHTML = '';
 
   friends.forEach(friend => {
-    const isMe = String(friend.id) === String(currentUserId);
+    // Current user is identified by device_id matching system hostname
+    const isMe = friend.device_id && friend.device_id === systemHostname;
+
     const li = document.createElement('li');
     li.className = `friend-card ${isMe ? 'current-user' : ''}`;
 
