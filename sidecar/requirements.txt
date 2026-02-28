@@ -1,0 +1,13 @@
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+mistralai>=0.4.0
+elevenlabs>=1.0.0
+weave>=0.50.0
+wandb>=0.16.0
+pywinctl>=0.3
+psutil>=5.9.0
+python-dotenv>=1.0.0
+pydantic>=2.5.0
+httpx>=0.26.0
+supabase>=2.3.0
+cachetools>=5.3.0

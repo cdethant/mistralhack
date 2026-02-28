@@ -1,0 +1,31 @@
+{
+    "name": "mistralhack-electron",
+    "version": "0.1.0",
+    "description": "Social accountability app – Electron frontend",
+    "main": "main/index.js",
+    "scripts": {
+        "dev": "concurrently \"npm run vite\" \"electron .\"",
+        "vite": "vite renderer --port 5173",
+        "build": "vite build renderer",
+        "start": "electron .",
+        "lint": "eslint renderer --ext .jsx,.js"
+    },
+    "dependencies": {
+        "@supabase/supabase-js": "^2.39.0",
+        "electron-store": "^8.2.0",
+        "zustand": "^4.5.0"
+    },
+    "devDependencies": {
+        "@vitejs/plugin-react": "^4.2.0",
+        "concurrently": "^8.2.2",
+        "electron": "^28.2.0",
+        "eslint": "^8.56.0",
+        "vite": "^5.0.12"
+    },
+    "keywords": [
+        "electron",
+        "react",
+        "supabase",
+        "accountability"
+    ]
+}
