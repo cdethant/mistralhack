@@ -122,9 +122,35 @@ function setupRealtimeListener(userId) {
         if (window.electronAPI && window.electronAPI.triggerPokeNotification) {
           window.electronAPI.triggerPokeNotification(senderName);
         }
+
+        showPokeUIIndicator(senderName);
       }
     )
     .subscribe();
+}
+
+function showPokeUIIndicator(senderName) {
+  let notif = document.getElementById('poke-notification');
+
+  if (!notif) {
+    notif = document.createElement('div');
+    notif.id = 'poke-notification';
+    document.body.appendChild(notif);
+  }
+
+  const avatarChar = senderName.charAt(0).toUpperCase();
+  notif.innerHTML = `
+    <div class="poke-notif-avatar">${avatarChar}</div>
+    <div class="poke-notif-text">${senderName} poked you!</div>
+  `;
+
+  // Show
+  notif.classList.add('show');
+
+  // Hide after 4 seconds
+  setTimeout(() => {
+    notif.classList.remove('show');
+  }, 4000);
 }
 
 function handlePoke(event) {
