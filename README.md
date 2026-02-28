@@ -1,8 +1,7 @@
 # mistralhack
 mistral nyc hackathon dev
 
- This app is a social accountability app such that when two friends are active on their laptops, one user can initiate a "poke" to a friend, which prompts a local AI agent to assess whether their friend is on task or not, and give a fun little voice avatar reminder to the off task user to stay on task.
-
+ A social accountability app that helps friends stay focused together. When both users are active on their laptops, one can send a "poke" to check in. The recipient's local AI agent then assesses their current activity—if they've drifted off-task, a playful voice avatar delivers a friendly nudge to get back on track.
 
 Tools at our disposable:
 - Mistral API
