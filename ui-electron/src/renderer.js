@@ -15,12 +15,10 @@ let friends = [];
 async function fetchFriends() {
   if (!supabase) {
     console.warn("Supabase client not initialized. Check your .env file.");
-    // Fallback to mock data if no .env configured
+    // Fallback if no .env configured
     friends = [
-      { id: 1, name: 'Alice Chen', status: 'Working on frontend', state: 'active', avatar: 'AC' },
-      { id: 2, name: 'Bob Smith', status: 'Distracted (YouTube)', state: 'idle', avatar: 'BS' },
-      { id: 3, name: 'Charlie Davis', status: 'Offline', state: 'offline', avatar: 'CD' },
-      { id: 4, name: 'Diana Prince', status: 'Deep work', state: 'active', avatar: 'DP' },
+      { id: 0, name: 'song' },
+      { id: 1, name: 'ethan' },
     ];
     renderFriends();
     return;
@@ -28,7 +26,7 @@ async function fetchFriends() {
 
   try {
     const { data, error } = await supabase
-      .from('friends')
+      .from('Users')
       .select('*')
       .order('name');
 
@@ -46,37 +44,51 @@ async function fetchFriends() {
   }
 }
 
+function getCurrentUserId() {
+  let userId = localStorage.getItem('current_user_id');
+  if (!userId) {
+    // Default to '1' (ethan) if not set, for demonstration purposes
+    userId = '1';
+    localStorage.setItem('current_user_id', userId);
+  }
+  return userId;
+}
+
 function renderFriends() {
   const listContainer = document.getElementById('friends-list');
   if (!listContainer) return;
 
+  const currentUserId = getCurrentUserId();
   listContainer.innerHTML = '';
 
   friends.forEach(friend => {
+    const isMe = String(friend.id) === String(currentUserId);
     const li = document.createElement('li');
-    li.className = 'friend-card';
+    li.className = `friend-card ${isMe ? 'current-user' : ''}`;
 
-    const canPoke = friend.state !== 'offline';
-    // Use fallback avatar if not provided in DB
-    const avatar = friend.avatar || friend.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+    // Use fallback avatar based on name
+    const avatar = friend.name ? friend.name.charAt(0).toUpperCase() : '?';
 
     li.innerHTML = `
       <div class="friend-info">
         <div class="friend-avatar">${avatar}</div>
         <div class="friend-details">
-          <span class="friend-name">${friend.name || 'Unknown'}</span>
+          <span class="friend-name">
+            ${friend.name || 'Unknown'}
+            ${isMe ? '<span class="me-badge">(Me)</span>' : ''}
+          </span>
           <span class="friend-status">
-            <span class="status-dot ${friend.state || 'offline'}"></span>
-            ${friend.status || 'Offline'}
+            <span class="status-dot active"></span>
+            Online
           </span>
         </div>
       </div>
       <button 
         class="poke-btn" 
         data-id="${friend.id}"
-        ${!canPoke ? 'disabled' : ''}
+        ${isMe ? 'disabled' : ''}
       >
-        Poke
+        ${isMe ? 'You' : 'Poke'}
       </button>
     `;
 

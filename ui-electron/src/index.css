@@ -75,6 +75,21 @@ ul {
   transition: transform 150ms ease-out, box-shadow 150ms ease-out, border-color 150ms ease-out;
 }
 
+.friend-card.current-user {
+  border-color: var(--accent);
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.me-badge {
+  font-size: 11px;
+  background: var(--accent);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
 .friend-card:hover {
   transform: translateY(-2px);
   border-color: rgba(255, 255, 255, 0.15);
