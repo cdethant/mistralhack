@@ -1,0 +1,18 @@
+[project]
+name = "sidecar"
+version = "0.1.0"
+description = "Focus tracking backend sidecar"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "httpx",
+    "pynput",
+]
+
+[dependency-groups]
+dev = [
+    "ruff",
+    "black",
+]
