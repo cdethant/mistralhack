@@ -9,6 +9,8 @@ dependencies = [
     "uvicorn",
     "httpx",
     "pynput",
+    "weave>=0.52.29",
+    "dotenv>=0.9.9",
 ]
 
 [dependency-groups]

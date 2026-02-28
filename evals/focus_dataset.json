@@ -1,0 +1,23 @@
+[
+    {
+        "input": "User is in VS Code, editing main.py. Terminal shows 'uvicorn' running.",
+        "expected": {
+            "is_focused": true,
+            "score": 10
+        }
+    },
+    {
+        "input": "User is in Chrome, browsing Reddit and YouTube. VS Code is minimized.",
+        "expected": {
+            "is_focused": false,
+            "score": 2
+        }
+    },
+    {
+        "input": "User is in Slack, messaging a colleague. Terminal shows occasional git commands.",
+        "expected": {
+            "is_focused": true,
+            "score": 7
+        }
+    }
+]

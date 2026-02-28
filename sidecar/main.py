@@ -2,11 +2,19 @@ import uvicorn
 from fastapi import FastAPI
 from pydantic import BaseModel
 import httpx
+import weave
+import os
 from contextlib import asynccontextmanager
 from collector import collector
+from dotenv import load_dotenv
 
-# Placeholder for LLM configuration
-LLM_ENDPOINT = "http://localhost:11434/v1/chat/completions"  # Default Ollama / Local Mistral
+load_dotenv()
+
+# Weave initialization
+weave.init("mistral-hackathon-focus")
+
+# LLM configuration - Defaults to tunnelled Brev / Local vLLM
+LLM_ENDPOINT = os.getenv("LLM_ENDPOINT", "http://localhost:8000/v1/chat/completions")
 
 class FocusStatus(BaseModel):
     is_focused: bool
@@ -33,6 +41,7 @@ async def get_metrics():
     return collector.get_context_for_llm()
 
 @app.get("/analyze")
+@weave.op()
 async def analyze_focus():
     """Sends current context to Mistral for analysis."""
     context = collector.get_context_for_llm()
