@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, Notification } from 'electron';
 import path from 'node:path';
 import os from 'node:os';
 import started from 'electron-squirrel-startup';
@@ -35,6 +35,15 @@ const createWindow = () => {
 app.whenReady().then(() => {
   // Handle IPC for hostname
   ipcMain.handle('get-hostname', () => os.hostname());
+
+  // Handle triggering notifications for received pokes
+  ipcMain.on('trigger-poke-notification', (event, data) => {
+    const { senderName } = data;
+    new Notification({
+      title: 'You got poked!',
+      body: `${senderName || 'A friend'} poked you. Get back to work!`
+    }).show();
+  });
 
   createWindow();
 

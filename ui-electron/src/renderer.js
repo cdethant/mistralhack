@@ -11,6 +11,7 @@ if (supabaseUrl && supabaseUrl !== "YOUR_SUPABASE_URL_HERE" && supabaseKey) {
 }
 
 let friends = [];
+let currentUser = null;
 
 async function fetchFriends() {
   if (!supabase) {
@@ -56,6 +57,7 @@ async function renderFriends() {
   friends.forEach(friend => {
     // Current user is identified by device_id matching system hostname
     const isMe = friend.device_id && friend.device_id === systemHostname;
+    if (isMe) currentUser = friend;
 
     const li = document.createElement('li');
     li.className = `friend-card ${isMe ? 'current-user' : ''}`;
@@ -93,6 +95,36 @@ async function renderFriends() {
   document.querySelectorAll('.poke-btn').forEach(btn => {
     btn.addEventListener('click', handlePoke);
   });
+
+  // Setup Realtime listener once we know who the current user is
+  if (currentUser && supabase) {
+    setupRealtimeListener(currentUser.id);
+  }
+}
+
+function setupRealtimeListener(userId) {
+  console.log('Setting up Realtime listener for user:', userId);
+  supabase
+    .channel('public:Pokes')
+    .on(
+      'postgres_changes',
+      {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'Pokes',
+        filter: `receiver_id=eq.${userId}`
+      },
+      (payload) => {
+        console.log('Poke received!', payload);
+        const senderId = payload.new.sender_id;
+        const senderName = friends.find(f => f.id == senderId)?.name || 'Someone';
+
+        if (window.electronAPI && window.electronAPI.triggerPokeNotification) {
+          window.electronAPI.triggerPokeNotification(senderName);
+        }
+      }
+    )
+    .subscribe();
 }
 
 function handlePoke(event) {
@@ -106,9 +138,15 @@ function handlePoke(event) {
   btn.classList.add('poked');
   btn.innerHTML = 'Poked!';
 
-  console.log(`Poked ${friendName}! (ID: ${friendId})`);
-  // Here we would typically trigger an IPC call to the main process
-  // window.electronAPI.pokeFriend(friendId);
+  console.log(`Poking ${friendName}! (ID: ${friendId})`);
+
+  if (supabase && currentUser) {
+    supabase.from('Pokes').insert([
+      { sender_id: currentUser.id, receiver_id: friendId }
+    ]).then(({ error }) => {
+      if (error) console.error('Error sending poke:', error);
+    });
+  }
 
   // Reset after 3 seconds
   setTimeout(() => {
