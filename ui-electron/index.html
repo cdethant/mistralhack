@@ -1,13 +1,25 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Hello World!</title>
 
-  </head>
-  <body>
-    <h1>💖 Hello World!</h1>
-    <p>Welcome to your Electron application.</p>
-    <script type="module" src="/src/renderer.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <title>Hello World!</title>
+
+</head>
+
+<body id="app">
+  <div id="app-container">
+    <header>
+      <h1>Focus Friends</h1>
+      <p class="subtitle">A social accountability app</p>
+    </header>
+    <main class="no-scrollbar">
+      <ul id="friends-list">
+        <!-- Dynamically populated -->
+      </ul>
+    </main>
+  </div>
+  <script type="module" src="/src/renderer.js"></script>
+</body>
+
 </html>
