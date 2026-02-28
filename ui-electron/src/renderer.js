@@ -1,12 +1,50 @@
+import { createClient } from '@supabase/supabase-js';
 import './index.css';
 
-// Mock data for friends
-const friends = [
-  { id: 1, name: 'Alice Chen', status: 'Working on frontend', state: 'active', avatar: 'AC' },
-  { id: 2, name: 'Bob Smith', status: 'Distracted (YouTube)', state: 'idle', avatar: 'BS' },
-  { id: 3, name: 'Charlie Davis', status: 'Offline', state: 'offline', avatar: 'CD' },
-  { id: 4, name: 'Diana Prince', status: 'Deep work', state: 'active', avatar: 'DP' },
-];
+// Initialize Supabase client
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+let supabase = null;
+if (supabaseUrl && supabaseUrl !== "YOUR_SUPABASE_URL_HERE" && supabaseKey) {
+  supabase = createClient(supabaseUrl, supabaseKey);
+}
+
+let friends = [];
+
+async function fetchFriends() {
+  if (!supabase) {
+    console.warn("Supabase client not initialized. Check your .env file.");
+    // Fallback to mock data if no .env configured
+    friends = [
+      { id: 1, name: 'Alice Chen', status: 'Working on frontend', state: 'active', avatar: 'AC' },
+      { id: 2, name: 'Bob Smith', status: 'Distracted (YouTube)', state: 'idle', avatar: 'BS' },
+      { id: 3, name: 'Charlie Davis', status: 'Offline', state: 'offline', avatar: 'CD' },
+      { id: 4, name: 'Diana Prince', status: 'Deep work', state: 'active', avatar: 'DP' },
+    ];
+    renderFriends();
+    return;
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('friends')
+      .select('*')
+      .order('name');
+
+    if (error) {
+      console.error('Error fetching friends from Supabase:', error.message);
+      return;
+    }
+
+    if (data) {
+      friends = data;
+      renderFriends();
+    }
+  } catch (err) {
+    console.error('Unexpected error:', err);
+  }
+}
 
 function renderFriends() {
   const listContainer = document.getElementById('friends-list');
@@ -19,15 +57,17 @@ function renderFriends() {
     li.className = 'friend-card';
 
     const canPoke = friend.state !== 'offline';
+    // Use fallback avatar if not provided in DB
+    const avatar = friend.avatar || friend.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
 
     li.innerHTML = `
       <div class="friend-info">
-        <div class="friend-avatar">${friend.avatar}</div>
+        <div class="friend-avatar">${avatar}</div>
         <div class="friend-details">
-          <span class="friend-name">${friend.name}</span>
+          <span class="friend-name">${friend.name || 'Unknown'}</span>
           <span class="friend-status">
-            <span class="status-dot ${friend.state}"></span>
-            ${friend.status}
+            <span class="status-dot ${friend.state || 'offline'}"></span>
+            ${friend.status || 'Offline'}
           </span>
         </div>
       </div>
@@ -72,4 +112,4 @@ function handlePoke(event) {
 }
 
 // Initialize
-document.addEventListener('DOMContentLoaded', renderFriends);
+document.addEventListener('DOMContentLoaded', fetchFriends);
