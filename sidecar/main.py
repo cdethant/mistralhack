@@ -77,11 +77,10 @@ Window Log:
 {context_str}
 
 Rules:
-- If the user is on-task (coding, terminal, docs, relevant research, team comms), congratulate them.
+- If the user is on-task (coding, terminal, docs, relevant research, team comms), respond with exactly: null
 - If the user is clearly off-task (social media, shopping, entertainment, unrelated browsing), respond with a single short, quippy roast in plain text. No JSON, no quotes, just the roast.
 - Be concise and funny. Do not over-explain.
 """
-#respond with exactly: null
 
     async with httpx.AsyncClient() as client:
         try:
