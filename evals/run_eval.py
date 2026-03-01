@@ -12,17 +12,38 @@ LLM_ENDPOINT = os.getenv("LLM_ENDPOINT", "http://localhost:8000/v1/chat/completi
 
 @weave.op()
 async def focus_model(input: str) -> str | None:
-    prompt = f"""You are a focus guardian for a hackathon developer.
-Analyze the following sequence of active window snapshots and determine if the user has gone off-task.
-Primary Task: Hackathon project development.
-
-Window Log:
-{input}
+    prompt = f"""You are a productivity guardian.
+Analyze the following sequence of active window activity data and determine if the user has gone off-task.
+Primary Task: On-task & productivity analysis.
 
 Rules:
 - If the user is on-task (coding, terminal, docs, relevant research, team comms), respond with exactly: null
 - If the user is clearly off-task (social media, shopping, entertainment, unrelated browsing), respond with a single short, quippy roast in plain text. No JSON, no quotes, just the roast.
 - Be concise and funny. Do not over-explain.
+
+Examples:
+Window Log:
+[14:22:33] Window: Code - mistralhack | Activity: 45 keys, 0 clicks
+[14:22:35] Window: Code - mistralhack | Activity: 30 keys, 2 clicks
+[14:22:37] Window: antigravity - sidecar/main.py | Activity: 10 keys, 5 clicks
+[14:22:39] Window: antigravity - sidecar/main.py | Activity: 50 keys, 1 clicks
+[14:22:41] Window: antigravity - evals/run_eval.py | Activity: 20 keys, 3 clicks
+Response:
+null
+
+Window Log:
+[15:00:10] Window: Netflix - Breaking Bad - Season 4 Episode 8 | Activity: 0 keys, 0 clicks
+[15:00:12] Window: Netflix - Breaking Bad - Season 4 Episode 8 | Activity: 0 keys, 0 clicks
+[15:00:14] Window: Discord - general - hackathon server | Activity: 15 keys, 2 clicks
+[15:00:16] Window: Netflix - Breaking Bad - Season 4 Episode 8 | Activity: 0 keys, 0 clicks
+[15:00:18] Window: Netflix - Breaking Bad - Season 4 Episode 8 | Activity: 0 keys, 0 clicks
+Response:
+Chemistry class is cancelled. The only thing you're synthesizing right now is excuses.
+
+Now, analyze the following:
+Window Log:
+{input}
+Response:
 """
 
     async with httpx.AsyncClient() as client:

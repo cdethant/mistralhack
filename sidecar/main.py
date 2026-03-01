@@ -107,5 +107,16 @@ Rules:
             print(f"[LLM Exception] {str(e)}")
             return {"is_focused": "error", "roast": None}
 
+class TestRoastPayload(BaseModel):
+    text: str
+
+@app.post("/test-roast")
+async def test_roast(payload: TestRoastPayload):
+    audio_result = await generate_roast_audio(payload.text)
+    audio_b64 = None
+    if audio_result and audio_result.get("status") == "success":
+        audio_b64 = audio_result.get("audio_b64")
+    return {"status": "success", "roast": payload.text, "audio_b64": audio_b64}
+
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=SIDECAR_PORT)

@@ -15,9 +15,13 @@ let sidecarProcess = null;
 function startSidecar() {
   // Resolve path: ui-electron/src/main.js -> mistralhack/sidecar/
   const sidecarDir = path.join(__dirname, '..', '..', '..', 'sidecar');
-  console.log(`[Sidecar] Starting from: ${sidecarDir}`);
+  const pythonExecutable = os.platform() === 'win32'
+    ? path.join(sidecarDir, '.venv', 'Scripts', 'python.exe')
+    : path.join(sidecarDir, '.venv', 'bin', 'python');
 
-  sidecarProcess = spawn('python3', ['main.py'], {
+  console.log(`[Sidecar] Starting from: ${sidecarDir} using python at ${pythonExecutable}`);
+
+  sidecarProcess = spawn(pythonExecutable, ['main.py'], {
     cwd: sidecarDir,
     env: { ...process.env },
   });
@@ -85,10 +89,15 @@ app.whenReady().then(() => {
   });
 
   // Proxy HTTP calls to the sidecar so the sandboxed renderer doesn't need fetch access
-  ipcMain.handle('call-sidecar', async (event, { path: sidecarPath, method = 'GET' }) => {
+  ipcMain.handle('call-sidecar', async (event, { path: sidecarPath, method = 'GET', body = null }) => {
     const url = `http://127.0.0.1:${SIDECAR_PORT}${sidecarPath}`;
     try {
-      const response = await fetch(url, { method });
+      const options = { method };
+      if (body) {
+        options.headers = { 'Content-Type': 'application/json' };
+        options.body = JSON.stringify(body);
+      }
+      const response = await fetch(url, options);
       const data = await response.json();
       console.log(`[Sidecar IPC] ${method} ${sidecarPath} →`, data);
       return { ok: true, data };

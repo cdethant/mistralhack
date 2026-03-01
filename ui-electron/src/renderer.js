@@ -221,8 +221,23 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // DevTools test helper — run: window.testRoastOverlay('your message here')
-window.testRoastOverlay = (roast = 'Stop looking at twitter and do some work!', audio_b64 = '') => {
-  console.log('[Roast] Manual test triggered');
+window.testRoastOverlay = async (roast = 'Stop looking at twitter and do some work!', audio_b64 = '') => {
+  console.log('[Roast] Manual test triggered. If no audio is provided, we will ping sidecar to generate it.');
+
+  if (!audio_b64 && window.electronAPI && window.electronAPI.callSidecar) {
+    console.log('[Roast] Fetching audio from sidecar /test-roast...');
+    try {
+      const result = await window.electronAPI.callSidecar('/test-roast', 'POST', { text: roast });
+      if (result.ok && result.data && result.data.audio_b64) {
+        audio_b64 = result.data.audio_b64;
+      } else {
+        console.warn(`[Roast] Sidecar didn't provide audio_b64:`, result);
+      }
+    } catch (err) {
+      console.error('[Roast] Failed to fetch test audio:', err);
+    }
+  }
+
   if (window.electronAPI && window.electronAPI.showRoastOverlay) {
     window.electronAPI.showRoastOverlay({ roast, audio_b64 });
   } else {
