@@ -121,12 +121,6 @@ function setupRealtimeListener(userId) {
         const senderId = payload.new.sender_id;
         const senderName = friends.find(f => f.id == senderId)?.name || 'Someone';
 
-        if (window.electronAPI && window.electronAPI.triggerPokeNotification) {
-          window.electronAPI.triggerPokeNotification(senderName);
-        }
-
-        showPokeUIIndicator(senderName);
-
         // Trigger sidecar focus analysis + ElevenLabs roast if off-task
         if (window.electronAPI && window.electronAPI.callSidecar) {
           console.log('[Roast] Calling sidecar /poke...');
@@ -154,29 +148,7 @@ function setupRealtimeListener(userId) {
     .subscribe();
 }
 
-function showPokeUIIndicator(senderName) {
-  let notif = document.getElementById('poke-notification');
 
-  if (!notif) {
-    notif = document.createElement('div');
-    notif.id = 'poke-notification';
-    document.body.appendChild(notif);
-  }
-
-  const avatarChar = senderName.charAt(0).toUpperCase();
-  notif.innerHTML = `
-    <div class="poke-notif-avatar">${avatarChar}</div>
-    <div class="poke-notif-text">${senderName} poked you!</div>
-  `;
-
-  // Show
-  notif.classList.add('show');
-
-  // Hide after 4 seconds
-  setTimeout(() => {
-    notif.classList.remove('show');
-  }, 4000);
-}
 
 function handlePoke(event) {
   const btn = event.currentTarget;
@@ -222,49 +194,27 @@ function showLLMRoastPopup(roastText) {
     const content = document.createElement('span');
     content.className = 'roast-content';
 
-    const cursor = document.createElement('span');
-    cursor.className = 'roast-cursor';
-    cursor.textContent = '|';
-
     popup.appendChild(label);
     popup.appendChild(content);
-    popup.appendChild(cursor);
     document.body.appendChild(popup);
   }
 
-  // Reset
+  // Set full text immediately — no streaming
   const content = popup.querySelector('.roast-content');
-  const cursor = popup.querySelector('.roast-cursor');
-  content.textContent = '';
-  cursor.style.opacity = '1';
+  content.textContent = roastText;
 
   // Clear any existing dismiss timer
   if (popup._dismissTimer) clearTimeout(popup._dismissTimer);
-  if (popup._streamInterval) clearInterval(popup._streamInterval);
 
   // Show
   console.log('[Roast] Adding .show class to popup');
   popup.classList.add('show');
-  console.log('[Roast] Popup classes after show:', popup.className, '| computed opacity:', getComputedStyle(popup).opacity);
 
-  // Stream text in character by character
-  let i = 0;
-  const speed = 28; // ms per character
-  popup._streamInterval = setInterval(() => {
-    if (i < roastText.length) {
-      content.textContent += roastText[i];
-      i++;
-    } else {
-      clearInterval(popup._streamInterval);
-      // Blink cursor briefly then hide
-      setTimeout(() => { cursor.style.opacity = '0'; }, 800);
-      // Auto-dismiss after reading time (min 4s, +40ms per char)
-      const readTime = Math.max(4000, roastText.length * 40);
-      popup._dismissTimer = setTimeout(() => {
-        popup.classList.remove('show');
-      }, readTime);
-    }
-  }, speed);
+  // Auto-dismiss after reading time (min 4s, +40ms per char)
+  const readTime = Math.max(4000, roastText.length * 40);
+  popup._dismissTimer = setTimeout(() => {
+    popup.classList.remove('show');
+  }, readTime);
 }
 
 // Initialize

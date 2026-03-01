@@ -358,27 +358,25 @@ ul {
   border-color: var(--border);
 }
 
-/* Poke Notification */
+/* Poke Notification Overlay */
 #poke-notification {
   position: fixed;
-  bottom: 28px;
+  bottom: 24px;
   left: 50%;
-  transform: translateX(-50%) translateY(16px);
+  transform: translateX(-50%) translateY(20px);
   background: var(--surface);
-  border: 1px solid var(--border-accent);
+  border: 1px solid var(--accent);
   border-radius: 12px;
-  padding: 10px 18px 10px 12px;
+  padding: 12px 20px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(99, 102, 241, 0.1);
+  gap: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
   z-index: 1000;
   opacity: 0;
   visibility: hidden;
-  transition: all 450ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 400ms cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
 }
 
 #poke-notification.show {
@@ -388,24 +386,23 @@ ul {
 }
 
 .poke-notif-avatar {
-  width: 28px;
-  height: 28px;
-  border-radius: 7px;
-  background: linear-gradient(135deg, #6366F1, #4F46E5);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--accent);
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Space Mono', monospace;
-  font-weight: 700;
-  font-size: 12px;
+  font-weight: 600;
+  font-size: 14px;
   flex-shrink: 0;
 }
 
 .poke-notif-text {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
-  color: var(--text-1);
+  color: var(--text-primary);
   white-space: nowrap;
 }
 
@@ -417,21 +414,24 @@ ul {
 /* Roast Popup */
 #llm-roast-popup {
   position: fixed;
-  bottom: 80px;
+  bottom: 88px;
+  /* sits above the poke notification */
   right: 24px;
-  max-width: 340px;
-  background: rgba(17, 17, 20, 0.9);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(167, 139, 250, 0.2);
+  max-width: 360px;
+  background: rgba(26, 26, 26, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(167, 139, 250, 0.35);
   border-radius: 12px;
-  padding: 14px 16px;
-  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5), 0 0 32px rgba(167, 139, 250, 0.06);
+  padding: 14px 18px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(167, 139, 250, 0.08);
   z-index: 1001;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(10px) scale(0.97);
-  transition: all 350ms cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(12px) scale(0.97);
+  transition: opacity 350ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 350ms cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 350ms;
   pointer-events: none;
   font-size: 13px;
   line-height: 1.55;
@@ -440,7 +440,7 @@ ul {
 #llm-roast-popup.show {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0) scale(1);
+  transform: translateX(-50%) translateY(0) scale(1);
 }
 
 .roast-label {
@@ -453,6 +453,7 @@ ul {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  margin-right: 2px;
 }
 
 .roast-content {
@@ -464,10 +465,11 @@ ul {
   display: inline-block;
   color: #A78BFA;
   font-weight: 300;
-  animation: blink 0.8s step-end infinite;
+  animation: roast-blink 0.8s step-end infinite;
+  transition: opacity 300ms ease;
 }
 
-@keyframes blink {
+@keyframes roast-blink {
 
   0%,
   100% {
@@ -477,15 +479,4 @@ ul {
   50% {
     opacity: 0;
   }
-}
-
-/* Section label */
-.section-label {
-  font-family: 'Space Mono', monospace;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text-3);
-  padding-left: 2px;
 }

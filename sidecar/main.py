@@ -51,12 +51,15 @@ async def receive_poke():
     collector.pause()
     try:
         result = await analyze_focus()
+        audio_b64 = None
         if not result.get("is_focused", True) and result.get("roast"):
-            await generate_roast_audio(result["roast"])
+            audio_result = await generate_roast_audio(result["roast"])
+            if audio_result and audio_result.get("status") == "success":
+                audio_b64 = audio_result.get("audio_b64")
     finally:
         collector.resume()
     
-    return {"status": "processed", "analysis": result}
+    return {"status": "processed", "analysis": result, "audio_b64": audio_b64}
 
 @app.get("/analyze")
 @weave.op()

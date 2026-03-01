@@ -1,4 +1,5 @@
 import os
+import base64
 import httpx
 import weave
 
@@ -34,18 +35,9 @@ async def generate_roast_audio(text: str):
         try:
             response = await client.post(url, json=data, headers=headers)
             if response.status_code == 200:
-                # In a real desktop app, we'd play this audio immediately.
-                # For the sidecar, we'll save it to a temp file or just acknowledge success.
-                audio_path = "/tmp/roast_audio.mp3"
-                with open(audio_path, "wb") as f:
-                    f.write(response.content)
-                
-                # Command to play audio (platform specific)
-                # os.system(f"afplay {audio_path}") # macOS
-                # os.system(f"mpg123 {audio_path}") # Linux
-                
-                print(f"[ElevenLabs] Successfully generated audio to {audio_path}")
-                return {"status": "success", "audio_path": audio_path}
+                audio_b64 = base64.b64encode(response.content).decode("utf-8")
+                print(f"[ElevenLabs] Successfully generated audio ({len(response.content)} bytes)")
+                return {"status": "success", "audio_b64": audio_b64}
             else:
                 print(f"[ElevenLabs Error] {response.status_code}: {response.text}")
                 return {"status": "error", "message": response.text}
