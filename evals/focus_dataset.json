@@ -1,0 +1,82 @@
+[
+    {
+        "input": "[Focus Collector] Active Window: {'app': 'com.mitchellh.ghostty', 'title': 'ethant@panigale:~/Projects/Hackathons/mistralhack'}\n[Focus Collector] Active Window: {'app': 'com.mitchellh.ghostty', 'title': 'ethant@panigale:~/Projects/Hackathons/mistralhack'}\n[Focus Collector] Active Window: {'app': 'antigravity', 'title': 'mistralhack - Antigravity - sidecar/main.py'}\n[Focus Collector] Active Window: {'app': 'antigravity', 'title': 'mistralhack - Antigravity - sidecar/main.py'}\n[Focus Collector] Active Window: {'app': 'antigravity', 'title': 'mistralhack - Antigravity - evals/run_eval.py'}",
+        "expected": null
+    },
+    {
+        "input": "[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'YouTube - Mechanical Keyboard Sound Review 2024'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'YouTube - Mechanical Keyboard Sound Review 2024'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'YouTube - Mechanical Keyboard Sound Review 2024'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'Reddit - r/MechanicalKeyboards'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'YouTube - BEST Fails Compilation 2024'}",
+        "expected": "Your keyboard sounds great. Too bad you're not actually typing anything with it."
+    },
+    {
+        "input": "[Focus Collector] Active Window: {'app': 'Slack', 'title': '(DM) - CSI - Slack'}\n[Focus Collector] Active Window: {'app': 'antigravity', 'title': 'mistralhack - Antigravity - sidecar/main.py'}\n[Focus Collector] Active Window: {'app': 'com.mitchellh.ghostty', 'title': 'ethant@panigale:~/Projects/Hackathons/mistralhack'}\n[Focus Collector] Active Window: {'app': 'antigravity', 'title': 'mistralhack - Antigravity - sidecar/main.py'}\n[Focus Collector] Active Window: {'app': 'Slack', 'title': 'William Soh (DM) - CSI - Slack'}",
+        "expected": null
+    },
+    {
+        "input": "[Focus Collector] Active Window: {'app': 'Netflix', 'title': 'Breaking Bad - Season 4 Episode 8'}\n[Focus Collector] Active Window: {'app': 'Netflix', 'title': 'Breaking Bad - Season 4 Episode 8'}\n[Focus Collector] Active Window: {'app': 'Discord', 'title': 'general - hackathon server'}\n[Focus Collector] Active Window: {'app': 'Netflix', 'title': 'Breaking Bad - Season 4 Episode 8'}\n[Focus Collector] Active Window: {'app': 'Netflix', 'title': 'Breaking Bad - Season 4 Episode 8'}",
+        "expected": "Chemistry class is cancelled. The only thing you're synthesizing right now is excuses."
+    },
+    {
+        "input": "[Focus Collector] Active Window: {'app': 'antigravity', 'title': 'Hackathons - Antigravity - main.py'}\n[Focus Collector] Active Window: {'app': 'antigravity', 'title': 'Hackathons - Antigravity - main.py'}\n[Focus Collector] Active Window: {'app': 'antigravity', 'title': 'Hackathons - Antigravity - main.py'}\n[Focus Collector] Active Window: {'app': 'com.mitchellh.ghostty', 'title': 'ethant@panigale:~'}\n[Focus Collector] Active Window: {'app': 'antigravity', 'title': 'Hackathons - Antigravity - main.py'}",
+        "expected": null
+    },
+    {
+        "input": "[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'Amazon - Gaming Chairs - Best Sellers'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'Amazon - Gaming Chairs - Best Sellers'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'Amazon - Best Deals Today'}\n[Focus Collector] Active Window: {'app': 'antigravity', 'title': 'Hackathons - Antigravity - main.py'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'Amazon - Compare Gaming Chairs'}",
+        "expected": "A new chair won't fix your posture. Neither will shopping for one instead of shipping."
+    },
+    {
+        "input": "[Focus Collector] Active Window: {'app': 'zoom.us', 'title': 'Hackathon Team Standup'}\n[Focus Collector] Active Window: {'app': 'antigravity', 'title': 'mistralhack - Antigravity - docs/frontend_context.md'}\n[Focus Collector] Active Window: {'app': 'zoom.us', 'title': 'Hackathon Team Standup'}\n[Focus Collector] Active Window: {'app': 'com.mitchellh.ghostty', 'title': 'ethant@panigale:~/Projects/Hackathons/mistralhack'}\n[Focus Collector] Active Window: {'app': 'zoom.us', 'title': 'Hackathon Team Standup'}",
+        "expected": null
+    },
+    {
+        "input": "[Focus Collector] Active Window: {'app': 'Slack', 'title': 'William Soh (DM) - CSI - 6 new items - Slack'}\n[Focus Collector] Active Window: {'app': 'Slack', 'title': 'William Soh (DM) - CSI - 6 new items - Slack'}\n[Focus Collector] Active Window: {'app': 'Slack', 'title': '#random - CSI - Slack'}\n[Focus Collector] Active Window: {'app': 'Slack', 'title': '#random - CSI - Slack'}\n[Focus Collector] Active Window: {'app': 'Slack', 'title': '#random - CSI - Slack'}",
+        "expected": "The #random channel is not where breakthroughs happen. Allegedly."
+    },
+    {
+        "input": "[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'Supabase Docs - Row Level Security'}\n[Focus Collector] Active Window: {'app': 'antigravity', 'title': 'mistralhack - Antigravity - sidecar/main.py'}\n[Focus Collector] Active Window: {'app': 'com.mitchellh.ghostty', 'title': 'ethant@panigale:~'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'Supabase Docs - Auth Helpers'}\n[Focus Collector] Active Window: {'app': 'antigravity', 'title': 'mistralhack - Antigravity - sidecar/main.py'}",
+        "expected": null
+    },
+    {
+        "input": "[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'Twitter / X - Explore'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'Twitter / X - Explore'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'Twitter / X - Home'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'Twitter / X - Home'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'Twitter / X - Notifications'}",
+        "expected": "Refreshing Twitter again. Bold strategy for deadline day."
+    },
+    {
+        "input": "[Focus Collector] Active Window: {'app': 'antigravity', 'title': 'mistralhack - Antigravity - evals/run_eval.py'}\n[Focus Collector] Active Window: {'app': 'com.mitchellh.ghostty', 'title': 'ethant@panigale:~/Projects/Hackathons/mistralhack'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'W&B Weave Dashboard'}\n[Focus Collector] Active Window: {'app': 'antigravity', 'title': 'mistralhack - Antigravity - evals/run_eval.py'}\n[Focus Collector] Active Window: {'app': 'com.mitchellh.ghostty', 'title': 'ethant@panigale:~/Projects/Hackathons/mistralhack'}",
+        "expected": null
+    },
+    {
+        "input": "[Focus Collector] Active Window: {'app': 'Spotify', 'title': 'lofi beats to study/relax to'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'Reddit - r/csMajors - \"how do you deal with burnout\"'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'Reddit - r/csMajors - \"need motivation\"'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'Reddit - r/productivity - \"procrastination tips\"'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'Reddit - r/productivity - \"procrastination tips\"'}",
+        "expected": "Reading about how to stop procrastinating is... not stopping procrastination."
+    },
+    {
+        "input": "[Focus Collector] Active Window: {'app': 'com.mitchellh.ghostty', 'title': 'ethant@panigale:~/Projects/Hackathons'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'Mistral AI Docs - Chat Completions'}\n[Focus Collector] Active Window: {'app': 'antigravity', 'title': 'mistralhack - Antigravity - sidecar/main.py'}\n[Focus Collector] Active Window: {'app': 'antigravity', 'title': 'mistralhack - Antigravity - sidecar/main.py'}\n[Focus Collector] Active Window: {'app': 'com.mitchellh.ghostty', 'title': 'ethant@panigale:~/Projects/Hackathons/mistralhack'}",
+        "expected": null
+    },
+    {
+        "input": "[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'Nike - Running Shoes Sale'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'Nike - Running Shoes Sale'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'Adidas - Best Running Shoes 2024'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'Reddit - r/running - shoe recommendations'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'Nike - Checkout'}",
+        "expected": "You're about to run up a credit card bill. That counts as running, technically."
+    },
+    {
+        "input": "[Focus Collector] Active Window: {'app': 'Slack', 'title': '(DM) - CSI - Slack'}\n[Focus Collector] Active Window: {'app': 'Slack', 'title': '(DM) - CSI - Slack'}\n[Focus Collector] Active Window: {'app': 'antigravity', 'title': 'mistralhack - Antigravity - ui-electron/src/App.tsx'}\n[Focus Collector] Active Window: {'app': 'com.mitchellh.ghostty', 'title': 'ethant@panigale:~/Projects/Hackathons/mistralhack/ui-electron'}\n[Focus Collector] Active Window: {'app': 'antigravity', 'title': 'mistralhack - Antigravity - ui-electron/src/App.tsx'}",
+        "expected": null
+    },
+    {
+        "input": "[Focus Collector] Active Window: {'app': 'com.mitchellh.ghostty', 'title': 'ethant@panigale:~'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'Hacker News - Ask HN: How do you stay focused?'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'Hacker News - comments'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'Hacker News - Ask HN: How do you stay focused?'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'Hacker News - new comments'}",
+        "expected": "Asking Hacker News how to stay focused is the most ironic thing you could possibly do right now."
+    },
+    {
+        "input": "[Focus Collector] Active Window: {'app': 'antigravity', 'title': 'mistralhack - Antigravity - brev/serve.sh'}\n[Focus Collector] Active Window: {'app': 'antigravity', 'title': 'mistralhack - Antigravity - brev/quantize.sh'}\n[Focus Collector] Active Window: {'app': 'com.mitchellh.ghostty', 'title': 'ethant@panigale:~/Projects/Hackathons/mistralhack'}\n[Focus Collector] Active Window: {'app': 'antigravity', 'title': 'mistralhack - Antigravity - brev/siphon.sh'}\n[Focus Collector] Active Window: {'app': 'com.mitchellh.ghostty', 'title': 'ethant@panigale:~/Projects/Hackathons/mistralhack'}",
+        "expected": null
+    },
+    {
+        "input": "[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'ESPN - NBA Scores'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'ESPN - NBA Scores'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'Twitter / X - NBA'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'ESPN - NBA Scores'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'ESPN - NBA highlights'}",
+        "expected": "Full-court press on the NBA scores. The only pressing you should be doing is Ctrl+S."
+    },
+    {
+        "input": "[Focus Collector] Active Window: {'app': 'antigravity', 'title': 'mistralhack - Antigravity - sidecar/main.py'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'ElevenLabs API Docs'}\n[Focus Collector] Active Window: {'app': 'com.mitchellh.ghostty', 'title': 'ethant@panigale:~/Projects/Hackathons/mistralhack/sidecar'}\n[Focus Collector] Active Window: {'app': 'antigravity', 'title': 'mistralhack - Antigravity - sidecar/main.py'}\n[Focus Collector] Active Window: {'app': 'antigravity', 'title': 'mistralhack - Antigravity - sidecar/main.py'}",
+        "expected": null
+    },
+    {
+        "input": "[Focus Collector] Active Window: {'app': 'com.mitchellh.ghostty', 'title': 'ethant@panigale:~'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'OpenTable - Restaurants Near Me'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'Yelp - Best Ramen NYC'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'Yelp - Best Ramen NYC'}\n[Focus Collector] Active Window: {'app': 'Chrome', 'title': 'OpenTable - Make a Reservation'}",
+        "expected": "Planning dinner at a hackathon. Impressive commitment to the bit."
+    }
+]
