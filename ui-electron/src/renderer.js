@@ -1,6 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 import './index.css';
 
+const AVATAR_COLORS = ['avatar-emerald', 'avatar-indigo', 'avatar-rose', 'avatar-amber', 'avatar-cyan'];
+
 // Initialize Supabase client
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -54,7 +56,7 @@ async function renderFriends() {
 
   listContainer.innerHTML = '';
 
-  friends.forEach(friend => {
+  friends.forEach((friend, i) => {
     // Current user is identified by device_id matching system hostname
     const isMe = friend.device_id && friend.device_id === systemHostname;
     if (isMe) currentUser = friend;
@@ -67,7 +69,7 @@ async function renderFriends() {
 
     li.innerHTML = `
       <div class="friend-info">
-        <div class="friend-avatar">${avatar}</div>
+        <div class="friend-avatar ${AVATAR_COLORS[i % AVATAR_COLORS.length]}">${avatar}</div>
         <div class="friend-details">
           <span class="friend-name">
             ${friend.name || 'Unknown'}
