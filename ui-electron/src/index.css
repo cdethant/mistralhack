@@ -411,72 +411,52 @@ ul {
   font-weight: 600;
 }
 
-/* Roast Popup */
-#llm-roast-popup {
+/* Roast Overlay */
+#roast-overlay-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(5px);
+  -webkit-app-region: drag;
+  /* allows moving window */
+  z-index: 9999;
   position: fixed;
-  bottom: 88px;
-  /* sits above the poke notification */
-  right: 24px;
-  max-width: 360px;
-  background: rgba(26, 26, 26, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(167, 139, 250, 0.35);
-  border-radius: 12px;
-  padding: 14px 18px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(167, 139, 250, 0.08);
-  z-index: 1001;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(12px) scale(0.97);
-  transition: opacity 350ms cubic-bezier(0.16, 1, 0.3, 1),
-    transform 350ms cubic-bezier(0.16, 1, 0.3, 1),
-    visibility 350ms;
-  pointer-events: none;
-  font-size: 13px;
-  line-height: 1.55;
+  inset: 0;
 }
 
-#llm-roast-popup.show {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(-50%) translateY(0) scale(1);
+.dj-circle {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #60A5FA, #3B82F6 40%, #1E3A8A);
+  box-shadow: 0 0 80px rgba(59, 130, 246, 0.6);
+  transition: transform 0.05s ease-out, box-shadow 0.05s ease-out;
+  margin-bottom: 40px;
 }
 
-.roast-label {
-  font-family: 'Space Mono', monospace;
-  font-weight: 700;
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  background: linear-gradient(90deg, #A78BFA, #818CF8);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-right: 2px;
-}
+@keyframes pulse-idle {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 60px rgba(59, 130, 246, 0.4);
+  }
 
-.roast-content {
-  color: var(--text-1);
-  font-weight: 400;
-}
-
-.roast-cursor {
-  display: inline-block;
-  color: #A78BFA;
-  font-weight: 300;
-  animation: roast-blink 0.8s step-end infinite;
-  transition: opacity 300ms ease;
-}
-
-@keyframes roast-blink {
-
-  0%,
   100% {
-    opacity: 1;
+    transform: scale(1.05);
+    box-shadow: 0 0 100px rgba(59, 130, 246, 0.8);
   }
+}
 
-  50% {
-    opacity: 0;
-  }
+.roast-overlay-text {
+  font-family: 'Space Mono', monospace;
+  font-size: 24px;
+  font-weight: 700;
+  color: #FFFFFF;
+  text-align: center;
+  max-width: 80%;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+  line-height: 1.4;
 }

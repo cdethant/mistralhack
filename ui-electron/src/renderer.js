@@ -130,14 +130,14 @@ function setupRealtimeListener(userId) {
               console.warn('[Sidecar] Poke call failed:', result.error);
               return;
             }
-            const { is_focused, roast } = result.data || {};
+            const { is_focused, roast, audio_b64 } = result.data || {};
             console.log('[Roast] is_focused:', is_focused, '| roast:', roast);
             if (!is_focused && roast && roast !== 'null') {
-              console.log('[Roast] Showing LLM roast popup:', roast);
-              showLLMRoastPopup(roast);
+              console.log('[Roast] Showing LLM roast overlay:', roast);
+              window.electronAPI.showRoastOverlay({ roast, audio_b64 });
             } else {
-              console.log('[Roast] Null roast — showing fallback popup for:', senderName);
-              showLLMRoastPopup(`${senderName} just poked you for no reason`);
+              console.log('[Roast] Null roast — showing fallback overlay for:', senderName);
+              window.electronAPI.showRoastOverlay({ roast: `${senderName} just poked you for no reason`, audio_b64: null });
             }
           });
         } else {
@@ -178,50 +178,125 @@ function handlePoke(event) {
   }, 3000);
 }
 
-function showLLMRoastPopup(roastText) {
-  console.log('[Roast] showLLMRoastPopup called with:', roastText);
-  let popup = document.getElementById('llm-roast-popup');
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.location.hash === '#roast') {
+    initRoastOverlay();
+  } else {
+    fetchFriends();
+  }
+});
 
-  if (!popup) {
-    console.log('[Roast] Creating popup DOM element');
-    popup = document.createElement('div');
-    popup.id = 'llm-roast-popup';
+// DevTools test helper — run: window.testRoastOverlay('your message here')
+window.testRoastOverlay = (roast = 'Stop looking at twitter and do some work!', audio_b64 = '') => {
+  console.log('[Roast] Manual test triggered');
+  if (window.electronAPI && window.electronAPI.showRoastOverlay) {
+    window.electronAPI.showRoastOverlay({ roast, audio_b64 });
+  } else {
+    // Fallback if not in Electron or testing overlay directly
+    if (window.location.hash === '#roast') {
+      window.dispatchEvent(new CustomEvent('test-play-roast', { detail: { roast, audio_b64 } }));
+    }
+  }
+};
 
-    const label = document.createElement('span');
-    label.className = 'roast-label';
-    label.textContent = 'new poke: ';
+function initRoastOverlay() {
+  document.body.innerHTML = '';
+  document.body.style.background = 'transparent';
+  document.documentElement.style.background = 'transparent';
 
-    const content = document.createElement('span');
-    content.className = 'roast-content';
+  const container = document.createElement('div');
+  container.id = 'roast-overlay-container';
 
-    popup.appendChild(label);
-    popup.appendChild(content);
-    document.body.appendChild(popup);
+  const circle = document.createElement('div');
+  circle.className = 'dj-circle';
+
+  const textContainer = document.createElement('div');
+  textContainer.className = 'roast-overlay-text';
+  textContainer.textContent = '...';
+
+  container.appendChild(circle);
+  container.appendChild(textContainer);
+  document.body.appendChild(container);
+
+  const startAudioAnimation = (audioB64) => {
+    const audio = new Audio("data:audio/mpeg;base64," + audioB64);
+
+    // Web Audio API
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const source = audioCtx.createMediaElementSource(audio);
+    const analyser = audioCtx.createAnalyser();
+
+    analyser.fftSize = 256;
+    source.connect(analyser);
+    analyser.connect(audioCtx.destination);
+
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+
+    const animate = () => {
+      if (audio.paused || audio.ended) return;
+
+      requestAnimationFrame(animate);
+      analyser.getByteFrequencyData(dataArray);
+
+      let sum = 0;
+      for (let i = 0; i < bufferLength; i++) {
+        sum += dataArray[i];
+      }
+      const average = sum / bufferLength;
+
+      // Pulse scale between 1 and 1.3 based on volume
+      const scale = 1 + (average / 256) * 0.4;
+      circle.style.transform = `scale(${scale})`;
+      circle.style.boxShadow = `0 0 ${80 * scale}px rgba(59, 130, 246, ${0.6 * scale})`;
+    };
+
+    // Must resume AudioContext in some browsers but we are bypassing user interaction here
+    // as taking over screen needs audio to just play
+    audio.play().catch(e => console.error("Audio play failed:", e));
+
+    // Wait until audio starts playing to begin animation
+    audio.onplay = () => {
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      animate();
+    };
+
+    audio.onended = () => {
+      setTimeout(() => {
+        if (window.electronAPI && window.electronAPI.closeRoastOverlay) {
+          window.electronAPI.closeRoastOverlay();
+        }
+      }, 1500);
+    };
+  };
+
+  if (window.electronAPI && window.electronAPI.onPlayRoast) {
+    window.electronAPI.onPlayRoast(({ roast, audio_b64 }) => {
+      textContainer.textContent = roast || 'Get back to work!';
+      if (audio_b64) {
+        startAudioAnimation(audio_b64);
+      } else {
+        // Fallback animation if no audio
+        circle.style.animation = 'pulse-idle 1s infinite alternate ease-in-out';
+        setTimeout(() => {
+          if (window.electronAPI && window.electronAPI.closeRoastOverlay) {
+            window.electronAPI.closeRoastOverlay();
+          }
+        }, 4000);
+      }
+    });
   }
 
-  // Set full text immediately — no streaming
-  const content = popup.querySelector('.roast-content');
-  content.textContent = roastText;
-
-  // Clear any existing dismiss timer
-  if (popup._dismissTimer) clearTimeout(popup._dismissTimer);
-
-  // Show
-  console.log('[Roast] Adding .show class to popup');
-  popup.classList.add('show');
-
-  // Auto-dismiss after reading time (min 4s, +40ms per char)
-  const readTime = Math.max(4000, roastText.length * 40);
-  popup._dismissTimer = setTimeout(() => {
-    popup.classList.remove('show');
-  }, readTime);
+  window.addEventListener('test-play-roast', (e) => {
+    const { roast, audio_b64 } = e.detail;
+    textContainer.textContent = roast || 'Get back to work!';
+    if (audio_b64) {
+      startAudioAnimation(audio_b64);
+    } else {
+      circle.style.animation = 'pulse-idle 1s infinite alternate ease-in-out';
+    }
+  });
 }
-
-// Initialize
-document.addEventListener('DOMContentLoaded', fetchFriends);
-
-// DevTools test helper — run: window.testRoastPopup('your message here')
-window.testRoastPopup = (text = 'test poke: your message here') => {
-  console.log('[Roast] Manual test triggered');
-  showLLMRoastPopup(text);
-};

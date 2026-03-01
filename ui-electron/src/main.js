@@ -98,6 +98,43 @@ app.whenReady().then(() => {
     }
   });
 
+  let overlayWindow = null;
+
+  ipcMain.on('show-roast-overlay', (event, { roast, audio_b64 }) => {
+    if (overlayWindow) return;
+
+    overlayWindow = new BrowserWindow({
+      fullscreen: true,
+      transparent: true,
+      frame: false,
+      alwaysOnTop: true,
+      skipTaskbar: true,
+      webPreferences: {
+        preload: path.join(__dirname, 'preload.js'),
+      },
+    });
+
+    if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
+      overlayWindow.loadURL(`${MAIN_WINDOW_VITE_DEV_SERVER_URL}#roast`);
+    } else {
+      overlayWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`), { hash: 'roast' });
+    }
+
+    overlayWindow.webContents.on('did-finish-load', () => {
+      overlayWindow.webContents.send('play-roast', { roast, audio_b64 });
+    });
+
+    overlayWindow.on('closed', () => {
+      overlayWindow = null;
+    });
+  });
+
+  ipcMain.on('close-roast-overlay', () => {
+    if (overlayWindow) {
+      overlayWindow.close();
+    }
+  });
+
   createWindow();
 
   // On OS X it's common to re-create a window in the app when the
