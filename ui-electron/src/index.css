@@ -330,9 +330,12 @@ ul {
   transform: scale(0.96);
 }
 
-.poke-btn.poked {
+.poke-btn.poked,
+.poke-btn.poked:disabled {
   color: var(--green);
-  border-color: rgba(52, 211, 153, 0.2);
+  border-color: var(--green);
+  background: rgba(52, 211, 153, 0.1);
+  opacity: 1;
   cursor: default;
   animation: pokePop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -459,4 +462,37 @@ ul {
   max-width: 80%;
   text-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
   line-height: 1.4;
+}
+
+#local-toast-container {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(30, 41, 59, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  padding: 12px 24px;
+  border-radius: 30px;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+}
+
+#local-toast-container.show {
+  opacity: 1;
+}
+
+.local-toast-text {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #F8FAFC;
+  text-align: center;
+  white-space: nowrap;
 }

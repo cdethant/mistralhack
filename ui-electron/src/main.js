@@ -135,6 +135,7 @@ app.whenReady().then(() => {
     }
   });
 
+
   createWindow();
 
   // On OS X it's common to re-create a window in the app when the

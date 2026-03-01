@@ -7,4 +7,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
     showRoastOverlay: (data) => ipcRenderer.send('show-roast-overlay', data),
     closeRoastOverlay: () => ipcRenderer.send('close-roast-overlay'),
     onPlayRoast: (callback) => ipcRenderer.on('play-roast', (_event, data) => callback(data)),
+
 });

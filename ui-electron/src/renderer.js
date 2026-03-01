@@ -14,6 +14,7 @@ if (supabaseUrl && supabaseUrl !== "YOUR_SUPABASE_URL_HERE" && supabaseKey) {
 
 let friends = [];
 let currentUser = null;
+let ackChannel = null;
 
 async function fetchFriends() {
   if (!supabase) {
@@ -106,6 +107,24 @@ async function renderFriends() {
 
 function setupRealtimeListener(userId) {
   console.log('Setting up Realtime listener for user:', userId);
+
+  // Set up the ack channel if not already
+  if (!ackChannel && supabase) {
+    ackChannel = supabase.channel('room:poke_acks')
+      .on('broadcast', { event: 'ack' }, (payload) => {
+        console.log('Received broadcast ack:', payload);
+        if (payload.payload.sender_id === userId) {
+          const btn = document.querySelector(`.poke-btn[data-id="${payload.payload.receiver_id}"]`);
+          if (btn) {
+            btn.classList.remove('poked');
+            btn.innerHTML = 'Poke';
+            btn.disabled = false;
+          }
+        }
+      })
+      .subscribe();
+  }
+
   supabase
     .channel('public:Pokes')
     .on(
@@ -126,6 +145,16 @@ function setupRealtimeListener(userId) {
           console.log('[Roast] Calling sidecar /poke...');
           window.electronAPI.callSidecar('/poke', 'POST').then((result) => {
             console.log('[Roast] Sidecar result:', result);
+
+            // ALWAYS broadcast ack after sidecar finishes so sender button resets
+            if (ackChannel) {
+              ackChannel.send({
+                type: 'broadcast',
+                event: 'ack',
+                payload: { sender_id: senderId, receiver_id: userId }
+              });
+            }
+
             if (!result.ok) {
               console.warn('[Sidecar] Poke call failed:', result.error);
               return;
@@ -136,8 +165,8 @@ function setupRealtimeListener(userId) {
               console.log('[Roast] Showing LLM roast overlay:', roast);
               window.electronAPI.showRoastOverlay({ roast, audio_b64 });
             } else {
-              console.log('[Roast] Null roast — showing fallback overlay for:', senderName);
-              window.electronAPI.showRoastOverlay({ roast: `${senderName} just poked you for no reason`, audio_b64: null });
+              console.log('[Roast] Null roast — showing on-task toast for:', senderName);
+              showLocalToast(`${senderName} poked you for no reason`);
             }
           });
         } else {
@@ -157,9 +186,10 @@ function handlePoke(event) {
   const friendId = btn.getAttribute('data-id');
   const friendName = friends.find(f => f.id == friendId)?.name || 'Friend';
 
-  // Add haptic-like visual feedback
+  // Add visual feedback
   btn.classList.add('poked');
   btn.innerHTML = 'Poked!';
+  btn.disabled = true;
 
   console.log(`Poking ${friendName}! (ID: ${friendId})`);
 
@@ -171,11 +201,14 @@ function handlePoke(event) {
     });
   }
 
-  // Reset after 3 seconds
+  // Fallback reset after 30 seconds just in case ack never comes
   setTimeout(() => {
-    btn.classList.remove('poked');
-    btn.innerHTML = 'Poke';
-  }, 3000);
+    if (btn.classList.contains('poked')) {
+      btn.classList.remove('poked');
+      btn.innerHTML = 'Poke';
+      btn.disabled = false;
+    }
+  }, 30000);
 }
 
 // Initialize
@@ -298,5 +331,39 @@ function initRoastOverlay() {
     } else {
       circle.style.animation = 'pulse-idle 1s infinite alternate ease-in-out';
     }
+  });
+}
+
+function showLocalToast(text) {
+  let container = document.getElementById('local-toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'local-toast-container';
+
+    const textEl = document.createElement('div');
+    textEl.className = 'local-toast-text';
+    container.appendChild(textEl);
+
+    document.body.appendChild(container);
+  }
+
+  const textEl = container.querySelector('.local-toast-text');
+  textEl.textContent = text;
+
+  // Reset any ongoing animation
+  container.classList.remove('show');
+
+  // Force a reflow
+  void container.offsetWidth;
+
+  requestAnimationFrame(() => {
+    container.classList.add('show');
+
+    // Clear any existing timeout
+    if (container.hideTimeout) clearTimeout(container.hideTimeout);
+
+    container.hideTimeout = setTimeout(() => {
+      container.classList.remove('show');
+    }, 2500);
   });
 }
